@@ -159,6 +159,14 @@ impl<H> Cap<H> {
 		self.max_allocated.load(Ordering::Relaxed)
 	}
 
+	/// Resets the memory stats
+	#[cfg(feature = "stats")]
+	pub fn reset_stats(&self) {
+		let _ = self
+			.max_allocated
+			.fetch_min(self.allocated(), Ordering::Relaxed);
+	}
+
 	fn update_stats(&self, size: usize) {
 		#[cfg(feature = "stats")]
 		{
